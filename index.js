@@ -110,19 +110,19 @@ function check(port, host) {
 
     function onConnectCb() {
         //debug('check - promise resolved - in use');
-        deferred.resolve(inUse);
+        deferred.resolve(inUse, port);
         cleanUp();
     }
 
     function onErrorCb(err) {
         if (err.code !== 'ECONNREFUSED') {
             //debug('check - promise rejected, error: '+err.message);
-            deferred.reject(err);
+            deferred.reject(err, port);
         } else {
             //debug('ECONNREFUSED');
             inUse = false;
             //debug('check - promise resolved - not in use');
-            deferred.resolve(inUse);
+            deferred.resolve(inUse, port);
         }
         cleanUp();
     }
