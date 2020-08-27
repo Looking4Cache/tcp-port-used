@@ -77,12 +77,11 @@ function check(port, host) {
 
     var deferred = getDeferred();
     var inUse = true;
-    var portThis = port;
     var client;
 
     var opts;
     if (!is.obj(port)) {
-        opts = makeOptionsObj(port, host);
+        opts = makeOptionsObj(port, host, inUse);
     } else {
         opts = port;
     }
@@ -111,19 +110,19 @@ function check(port, host) {
 
     function onConnectCb() {
         //debug('check - promise resolved - in use');
-        deferred.resolve(inUse, portThis);
+        deferred.resolve(opts);
         cleanUp();
     }
 
     function onErrorCb(err) {
         if (err.code !== 'ECONNREFUSED') {
             //debug('check - promise rejected, error: '+err.message);
-            deferred.reject(err, portThis);
+            deferred.reject(err);
         } else {
             //debug('ECONNREFUSED');
-            inUse = false;
+            opts.inUse = false;
             //debug('check - promise resolved - not in use');
-            deferred.resolve(inUse, portThis);
+            deferred.resolve(opts);
         }
         cleanUp();
     }
